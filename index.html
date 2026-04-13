@@ -42,33 +42,47 @@ body::before{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;
 .nav-links a{font-family:var(--font-type);font-size:12px;letter-spacing:2px;
   color:rgba(255,255,255,0.58);text-decoration:none;text-transform:uppercase;transition:color .2s;}
 .nav-links a:hover{color:#fff}
-@media(max-width:480px){.nav-links{display:none}}
+/* Mobile nav — show always */
+@media(max-width:480px){
+  .nav-links{gap:14px}
+  .nav-links a{font-size:9px;letter-spacing:1px}
+}
 
 /* ── HERO ── */
 .hero{min-height:100svh;background:var(--denim);display:grid;grid-template-columns:1fr 1fr;
   align-items:center;position:relative;overflow:hidden;padding-top:54px;}
 .hero::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(255,255,255,0.011) 3px,rgba(255,255,255,0.011) 6px);}
+
+/* Hero entry animations */
 .hero-left{padding:clamp(40px,7vw,90px) clamp(24px,5vw,72px);position:relative;z-index:2;}
 .hero-tag{display:inline-block;font-family:var(--font-type);font-size:11px;letter-spacing:3px;
   text-transform:uppercase;color:var(--red);border:1px solid rgba(200,0,26,0.50);padding:4px 10px;
-  margin-bottom:22px;position:relative;}
+  margin-bottom:22px;position:relative;
+  opacity:0;animation:fadeSlideUp .7s ease .2s forwards;}
 .hero-tag::before{content:"";position:absolute;left:-8px;top:50%;transform:translateY(-50%);
   width:6px;height:2px;background:var(--red);}
 .hero-name{font-family:var(--font-stamp);font-size:clamp(72px,11vw,152px);letter-spacing:4px;
-  line-height:0.90;color:#fff;text-shadow:4px 4px 0 rgba(0,0,0,0.35),0 0 55px rgba(200,0,26,0.16);
-  animation:nameFlicker 8s ease-in-out infinite;}
+  line-height:0.90;color:#fff;
+  opacity:0;animation:nameReveal .9s cubic-bezier(.2,.8,.2,1) .4s forwards,nameFlicker 8s ease-in-out 1.5s infinite;}
+@keyframes nameReveal{from{opacity:0;transform:translateY(30px) skewX(-4deg)}to{opacity:1;transform:none}}
 @keyframes nameFlicker{
   0%,89%,100%{text-shadow:4px 4px 0 rgba(0,0,0,0.35),0 0 35px rgba(200,0,26,0.12)}
   90%{text-shadow:4px 4px 0 rgba(0,0,0,0.35),0 0 75px rgba(200,0,26,0.55),2px 0 var(--red),-2px 0 rgba(200,100,0,0.45)}
   91%{text-shadow:4px 4px 0 rgba(0,0,0,0.35),0 0 35px rgba(200,0,26,0.12)}}
 .hero-name-wrap{position:relative;display:inline-block}
-.hero-name-wrap::after{content:"";position:absolute;left:0;bottom:-8px;width:65%;height:4px;
-  background:var(--red);box-shadow:0 2px 12px rgba(200,0,26,0.55);}
+.hero-name-wrap::after{content:"";position:absolute;left:0;bottom:-8px;width:0;height:4px;
+  background:var(--red);box-shadow:0 2px 12px rgba(200,0,26,0.55);
+  animation:lineGrow .8s ease 1s forwards;}
+@keyframes lineGrow{from{width:0}to{width:65%}}
 .hero-sub{margin-top:28px;font-family:var(--font-hand);font-size:clamp(16px,2vw,21px);
-  color:rgba(255,255,255,0.52);letter-spacing:.4px;line-height:1.55;max-width:360px;}
+  color:rgba(255,255,255,0.52);letter-spacing:.4px;line-height:1.55;max-width:360px;
+  opacity:0;animation:fadeSlideUp .7s ease .75s forwards;}
 .hero-sub em{color:rgba(212,98,26,0.90);font-style:normal}
-.hero-btns{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+.hero-btns{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap;
+  opacity:0;animation:fadeSlideUp .7s ease .95s forwards;}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
 .btn-red{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;background:var(--red);
   color:#fff;text-decoration:none;font-family:var(--font-type);font-size:11px;letter-spacing:3px;
   text-transform:uppercase;border:none;position:relative;overflow:hidden;
@@ -83,90 +97,173 @@ body::before{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;
   clip-path:polygon(6px 0%,100% 0%,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
   transition:transform .18s,border-color .18s,color .18s;}
 .btn-outline:hover{transform:translateY(-2px);border-color:rgba(200,0,26,0.65);color:rgba(200,0,26,0.88)}
-.hero-right{position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;}
+
+.hero-right{position:relative;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .hero-right::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
   background:linear-gradient(to bottom,transparent,var(--red),transparent);opacity:0.50;z-index:1;}
 
-/* ── HERO DECORATIVE SVG ELEMENT (replaces anime char) ── */
+/* ════════════════════════════════════════════
+   FILM REEL — fully redesigned, visible, seamless
+   ════════════════════════════════════════════ */
 .hero-visual{
   position:relative;z-index:2;width:100%;height:100%;
   display:flex;align-items:center;justify-content:center;
-  padding:40px 24px;
+  padding:40px 32px;
+  opacity:0;animation:fadeSlideUp .9s ease .5s forwards;
 }
 .hero-reel{
   position:relative;
-  width:clamp(220px,38vw,480px);
+  width:clamp(260px,36vw,440px);
   aspect-ratio:1;
 }
-/* Big rotating film reel */
-.reel-ring{
+
+/* Outer glow ring — stationary */
+.reel-glow{
+  position:absolute;inset:-8%;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,0,26,0.10) 0%,rgba(200,0,26,0.03) 55%,transparent 75%);
+  pointer-events:none;
+}
+
+/* Main reel body — spins */
+.reel-body{
   position:absolute;inset:0;border-radius:50%;
-  border:2px solid rgba(200,0,26,0.18);
-  animation:reelSpin 28s linear infinite;
+  animation:reelSpin 12s linear infinite;
 }
-.reel-ring-2{
-  position:absolute;inset:8%;border-radius:50%;
-  border:1px solid rgba(200,0,26,0.10);
-  animation:reelSpin 18s linear infinite reverse;
+
+/* Reel track rings */
+.reel-body::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  border:2px solid rgba(200,0,26,0.55);
 }
+.reel-body::after{
+  content:"";position:absolute;inset:14%;border-radius:50%;
+  border:1.5px solid rgba(200,0,26,0.35);
+}
+
+/* Counter-spinning inner detail ring */
+.reel-inner{
+  position:absolute;inset:22%;border-radius:50%;
+  border:1px solid rgba(200,0,26,0.22);
+  animation:reelSpin 8s linear infinite reverse;
+}
+
 @keyframes reelSpin{to{transform:rotate(360deg)}}
-.reel-svg{
-  position:absolute;inset:0;width:100%;height:100%;
-  opacity:0.22;
-}
-/* Center circle with glow */
-.reel-center{
+
+/* Center hub */
+.reel-hub{
   position:absolute;inset:50%;transform:translate(-50%,-50%);
-  width:36%;height:36%;border-radius:50%;
-  background:radial-gradient(circle,rgba(200,0,26,0.28) 0%,rgba(26,46,74,0.60) 60%,transparent 100%);
-  border:2px solid rgba(200,0,26,0.40);
-  box-shadow:0 0 40px rgba(200,0,26,0.22),inset 0 0 20px rgba(200,0,26,0.12);
+  width:32%;height:32%;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,rgba(255,255,255,0.08),rgba(200,0,26,0.18) 40%,rgba(26,46,74,0.80) 100%);
+  border:2px solid rgba(200,0,26,0.65);
+  box-shadow:0 0 28px rgba(200,0,26,0.35),inset 0 0 16px rgba(200,0,26,0.12);
   display:flex;align-items:center;justify-content:center;
+  z-index:2;
 }
-.reel-center-hole{
-  width:30%;height:30%;border-radius:50%;
-  background:var(--denim);
-  border:1px solid rgba(200,0,26,0.30);
+.reel-hub-hole{
+  width:28%;height:28%;border-radius:50%;
+  background:rgba(10,18,32,0.90);
+  border:1px solid rgba(200,0,26,0.45);
 }
-/* Spoke holes */
-.reel-hole{
-  position:absolute;width:11%;height:11%;border-radius:50%;
-  border:1px solid rgba(200,0,26,0.28);
-  background:rgba(200,0,26,0.05);
-}
-/* Film strip ticking around */
-.reel-strip{
-  position:absolute;bottom:-28px;left:-14px;right:-14px;
-  height:24px;
-  background:repeating-linear-gradient(90deg,
-    rgba(200,0,26,0.22) 0px, rgba(200,0,26,0.22) 3px,
-    rgba(26,46,74,0.40) 3px, rgba(26,46,74,0.40) 18px
-  );
-  border-top:1px solid rgba(200,0,26,0.20);
-  border-bottom:1px solid rgba(200,0,26,0.20);
-  animation:stripScroll 1.2s linear infinite;
-}
-@keyframes stripScroll{from{background-position:0 0}to{background-position:21px 0}}
 
-/* Floating badges */
-.reel-badge{
+/* Spoke holes — 6 around the reel, part of reel-body so they spin */
+.reel-spoke-wrap{
+  position:absolute;inset:0;border-radius:50%;
+  animation:reelSpin 12s linear infinite;
+}
+.reel-spoke{
   position:absolute;
-  font-family:var(--font-type);font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,255,255,0.55);
-  background:rgba(26,46,74,0.80);
-  border:1px solid rgba(200,0,26,0.28);
-  padding:4px 9px;white-space:nowrap;
+  width:11%;height:11%;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,0,26,0.28),rgba(26,46,74,0.85));
+  border:1.5px solid rgba(200,0,26,0.60);
+  box-shadow:0 0 8px rgba(200,0,26,0.30);
 }
-.rb-1{top:6%;left:-8%;animation:badgeFloat 4s ease-in-out infinite}
-.rb-2{bottom:12%;right:-10%;animation:badgeFloat 5s ease-in-out infinite .8s}
-.rb-3{top:40%;right:-14%;animation:badgeFloat 4.5s ease-in-out infinite 1.4s}
-@keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+/* Position 6 holes */
+.rs-0{top:5%;left:50%;transform:translateX(-50%)}
+.rs-1{top:27%;right:4%;transform:translateY(-50%)}
+.rs-2{bottom:27%;right:4%;transform:translateY(50%)}
+.rs-3{bottom:5%;left:50%;transform:translateX(-50%)}
+.rs-4{bottom:27%;left:4%;transform:translateY(50%)}
+.rs-5{top:27%;left:4%;transform:translateY(-50%)}
 
-/* Red accent lines */
-.reel-accent-v{position:absolute;left:-40px;top:10%;height:80%;width:1px;
-  background:linear-gradient(to bottom,transparent,rgba(200,0,26,0.45),transparent);}
-.reel-accent-h{position:absolute;top:-20px;left:10%;width:80%;height:1px;
-  background:linear-gradient(to right,transparent,rgba(200,0,26,0.30),transparent);}
+/* Spokes connecting hub to holes */
+.reel-spokes-svg{
+  position:absolute;inset:0;width:100%;height:100%;
+  animation:reelSpin 12s linear infinite;
+}
+
+/* Film strip — seamless horizontal scroll at bottom */
+.reel-filmstrip-wrap{
+  position:absolute;bottom:-36px;left:-20px;right:-20px;
+  height:28px;overflow:hidden;
+  border-top:1px solid rgba(200,0,26,0.40);
+  border-bottom:1px solid rgba(200,0,26,0.40);
+}
+.reel-filmstrip{
+  position:absolute;top:0;left:0;
+  /* double-wide so the loop is perfectly seamless */
+  width:200%;height:100%;
+  background:repeating-linear-gradient(90deg,
+    rgba(200,0,26,0.42) 0px,rgba(200,0,26,0.42) 4px,
+    rgba(26,46,74,0.65) 4px,rgba(26,46,74,0.65) 22px
+  );
+  animation:stripLoop 1.8s linear infinite;
+}
+/* Key: the pattern unit is 22px, animation moves by exactly 22px so it tiles seamlessly */
+@keyframes stripLoop{
+  from{transform:translateX(0)}
+  to{transform:translateX(-22px)}
+}
+
+/* Floating stat badges */
+.reel-stat{
+  position:absolute;
+  display:flex;flex-direction:column;align-items:flex-start;
+  gap:2px;
+}
+.reel-stat-label{
+  font-family:var(--font-type);font-size:8px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(200,0,26,0.80);
+}
+.reel-stat-val{
+  font-family:var(--font-stamp);font-size:22px;letter-spacing:2px;
+  color:#fff;line-height:1;
+  text-shadow:0 0 16px rgba(200,0,26,0.45);
+}
+.reel-stat-bar{
+  width:100%;height:2px;
+  background:linear-gradient(to right,var(--red),rgba(200,0,26,0.15));
+  margin-top:2px;
+}
+/* Badge positions */
+.rs-top-left{top:8%;left:-18%;animation:statFloat 5s ease-in-out infinite}
+.rs-top-right{top:8%;right:-18%;animation:statFloat 4.5s ease-in-out .6s infinite}
+.rs-bottom{bottom:16%;right:-20%;animation:statFloat 5.5s ease-in-out 1.2s infinite}
+@keyframes statFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-7px)}
+}
+
+/* Accent lines */
+.reel-line-v{position:absolute;left:-50px;top:12%;bottom:12%;width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(200,0,26,0.55),transparent);}
+.reel-line-h{position:absolute;top:-18px;left:12%;right:12%;height:1px;
+  background:linear-gradient(to right,transparent,rgba(200,0,26,0.40),transparent);}
+
+/* Scanning line — sweeps across */
+.reel-scan{
+  position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none;
+}
+.reel-scan::after{
+  content:"";position:absolute;top:0;left:-100%;width:40%;height:100%;
+  background:linear-gradient(to right,transparent,rgba(255,255,255,0.04),transparent);
+  animation:scanSweep 3s ease-in-out infinite;
+}
+@keyframes scanSweep{
+  0%{left:-40%;opacity:0}
+  20%{opacity:1}
+  80%{opacity:1}
+  100%{left:140%;opacity:0}
+}
 
 .hero-char{max-height:clamp(420px,75vh,780px);width:auto;position:relative;z-index:2;
   filter:drop-shadow(-8px 0 28px rgba(200,0,26,0.28)) drop-shadow(0 0 55px rgba(20,30,60,0.65));
@@ -179,15 +276,33 @@ body::before{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;
 .c-br{bottom:24px;right:16px;border-width:0 2px 2px 0}
 .status-badge{position:absolute;bottom:clamp(28px,5vh,60px);left:clamp(24px,5vw,72px);z-index:3;
   display:flex;align-items:center;gap:8px;font-family:var(--font-type);font-size:10px;
-  letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.40);}
+  letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.40);
+  opacity:0;animation:fadeSlideUp .7s ease 1.1s forwards;}
 .status-dot{width:7px;height:7px;border-radius:50%;background:var(--red);
   box-shadow:0 0 8px rgba(200,0,26,0.80);animation:pulse 1.8s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.32;transform:scale(0.68)}}
+
+/* Mobile hero */
 @media(max-width:720px){
-  .hero{grid-template-columns:1fr}
-  .hero-right{display:none}
-  .hero-left{padding:clamp(32px,8vw,60px) clamp(20px,5vw,40px);text-align:center}
-  .hero-name-wrap::after{left:50%;transform:translateX(-50%);width:50%}
+  .hero{grid-template-columns:1fr;grid-template-rows:auto}
+  .hero-right{
+    display:flex;
+    height:220px;
+    align-items:center;
+    justify-content:center;
+    overflow:visible;
+  }
+  .hero-right::before{display:none}
+  .hero-visual{padding:10px 16px;height:220px;}
+  .hero-reel{
+    width:clamp(160px,55vw,220px);
+  }
+  .reel-stat{display:none}
+  .reel-line-v,.reel-line-h{display:none}
+  .reel-filmstrip-wrap{display:none}
+  .hero-left{padding:clamp(32px,8vw,60px) clamp(20px,5vw,40px);text-align:center;order:-1}
+  .hero-name-wrap::after{animation:lineGrowCenter .8s ease 1s forwards;}
+  @keyframes lineGrowCenter{from{width:0;left:50%}to{width:50%;left:25%}}
   .hero-sub{margin:20px auto 0;max-width:300px}
   .hero-btns{justify-content:center}
   .status-badge{left:50%;transform:translateX(-50%)}
@@ -198,7 +313,6 @@ body::before{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;
 .portfolio::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;
   background:repeating-linear-gradient(90deg,var(--denim) 0,var(--denim) 8px,transparent 8px,transparent 14px);opacity:0.30;}
 
-/* Sub-section divider between short/long form */
 .portfolio-sub{margin-bottom:72px;}
 .portfolio-sub+.portfolio-sub{
   padding-top:60px;
@@ -237,7 +351,6 @@ body::before{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;
   border:1px solid rgba(92,58,30,0.25);padding:2px 7px;}
 .card-tape{height:6px;
   background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 20px,rgba(180,0,15,0.70) 20px,rgba(180,0,15,0.70) 22px);}
-/* long-form cards: amber/leather tape */
 .card-tape-long{
   background:repeating-linear-gradient(90deg,var(--leather) 0,var(--leather) 20px,rgba(92,58,30,0.65) 20px,rgba(92,58,30,0.65) 22px);}
 
@@ -292,34 +405,15 @@ body::before{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;
 }
 /* ANDROID FULLSCREEN FIX */
 .p5-player.fs-mode{
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100dvh;
-  z-index:99999;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  background:#000;
-}
-
+  position:fixed;inset:0;width:100vw;height:100dvh;z-index:99999;
+  display:flex;flex-direction:column;justify-content:center;background:#000;}
 .p5-player.fs-mode .p5-video{
-  width:100%;
-  height:calc(100dvh - 110px);
-  object-fit:contain;
-  background:#000;
-}
-
+  width:100%;height:calc(100dvh - 110px);object-fit:contain;background:#000;}
 .p5-player.fs-mode .p5-controls{
-  width:100%;
-  padding:14px 16px 16px;
-  border-top:2px solid var(--red);
-  background:linear-gradient(to top,rgba(12,18,28,0.96),rgba(12,18,28,0.88));
-}
+  width:100%;padding:14px 16px 16px;border-top:2px solid var(--red);
+  background:linear-gradient(to top,rgba(12,18,28,0.96),rgba(12,18,28,0.88));}
+body.no-scroll{overflow:hidden;}
 
-body.no-scroll{
-  overflow:hidden;
-}
 .p5-bigplay{position:absolute;inset:0;margin:auto;width:58px;height:58px;
   background:rgba(0,0,0,0.52);border:2px solid rgba(200,0,26,0.72);border-radius:50%;
   display:grid;place-items:center;cursor:pointer;z-index:6;
@@ -331,31 +425,12 @@ body.no-scroll{
   font-size:11px;letter-spacing:1px;color:var(--red);opacity:0;pointer-events:none;transition:opacity .15s;z-index:7;}
 .p5-hint.show{opacity:1}
 .p5-gestures{
-  position:absolute;
-  left:0;
-  right:0;
-  top:0;
-  bottom:54px;
-  display:flex;
-  z-index:4;
-  pointer-events:none;
-}
-
-.p5-zone{
-  flex:1;
-  background:transparent;
-  border:none;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
-
+  position:absolute;left:0;right:0;top:0;bottom:54px;
+  display:flex;z-index:4;pointer-events:none;}
+.p5-zone{flex:1;background:transparent;border:none;padding:0;-webkit-tap-highlight-color:transparent}
 .p5-controls{
-  position:relative;
-  z-index:8;
-  background:var(--denim);
-  padding:8px 10px 10px;
-  border-top:2px solid var(--red);
-}
+  position:relative;z-index:8;
+  background:var(--denim);padding:8px 10px 10px;border-top:2px solid var(--red);}
 .p5-seek-row{display:flex;align-items:center;gap:7px;margin-bottom:7px}
 .p5-time{font-family:var(--font-type);font-size:10px;color:rgba(255,255,255,0.55);white-space:nowrap;min-width:32px}
 .p5-seek{flex:1;height:3px;-webkit-appearance:none;appearance:none;background:rgba(200,0,26,0.22);outline:none;cursor:pointer;border-radius:0}
@@ -372,30 +447,11 @@ body.no-scroll{
   background:rgba(255,255,255,0.18);outline:none;cursor:pointer;border-radius:0;}
 .p5-vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;background:var(--red);box-shadow:0 0 5px rgba(200,0,26,0.70)}
 @media(max-width:720px){
-  .p5-btn{
-    width:38px;
-    height:38px;
-  }
-
-  .p5-icon,
-  .p5-icon-play{
-    width:15px;
-    height:15px;
-  }
-
-  .p5-vol-slider{
-    width:64px;
-    height:4px;
-  }
-
-  .p5-seek{
-    height:4px;
-  }
-
-  .p5-bigplay{
-    width:54px;
-    height:54px;
-  }
+  .p5-btn{width:38px;height:38px;}
+  .p5-icon,.p5-icon-play{width:15px;height:15px;}
+  .p5-vol-slider{width:64px;height:4px;}
+  .p5-seek{height:4px;}
+  .p5-bigplay{width:54px;height:54px;}
 }
 .card-label{padding:12px 14px 14px;border-top:1px solid rgba(92,58,30,0.12);background:var(--paper);position:relative;}
 .card-label::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);opacity:0.65;}
@@ -407,10 +463,8 @@ body.no-scroll{
 /* ── PRICING ── */
 .pricing{
   background:var(--denim);
-  padding:100px clamp(16px,5vw,60px) 110px; /* slightly bigger spacing */
-  position:relative;
-  overflow:hidden;
-  text-align:center;
+  padding:100px clamp(16px,5vw,60px) 110px;
+  position:relative;overflow:hidden;text-align:center;
 }
 .pricing::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(255,255,255,0.009) 3px,rgba(255,255,255,0.009) 6px);}
@@ -422,85 +476,46 @@ body.no-scroll{
   color:#fff;margin-bottom:10px;line-height:1;position:relative;display:inline-block;}
 .pricing-title::after{content:"";position:absolute;bottom:-6px;left:0;width:40px;height:3px;background:var(--red);}
 .pricing-sub{
-  font-family:var(--font-type);
-  font-size:14px;
-  color:rgba(255,255,255,0.45);
-  letter-spacing:1px;
-  margin:18px auto 48px; /* ⭐ centers */
-  max-width:700px;
-}
+  font-family:var(--font-type);font-size:14px;color:rgba(255,255,255,0.45);
+  letter-spacing:1px;margin:18px auto 48px;max-width:700px;}
 .pricing-sub strong{color:var(--amber);font-style:normal;font-weight:normal;}
 .pricing-cards{
-  max-width:1000px;       
-  margin:0 auto;           
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:32px;                
-  justify-content:center;
-}
+  max-width:1000px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:32px;justify-content:center;}
 @media(max-width:640px){.pricing-cards{grid-template-columns:1fr;}}
-
 .price-card{
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.12);
-  padding:40px 34px 36px;
-  position:relative;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);
+  padding:40px 34px 36px;position:relative;
   clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
-  transition:border-color .22s,box-shadow .22s,transform .22s;
-}
-.price-card:hover{
-  border-color:rgba(200,0,26,0.45);
-  box-shadow:0 0 32px rgba(200,0,26,0.14);
-  transform:translateY(-3px);
-}
+  transition:border-color .22s,box-shadow .22s,transform .22s;}
+.price-card:hover{border-color:rgba(200,0,26,0.45);box-shadow:0 0 32px rgba(200,0,26,0.14);transform:translateY(-3px);}
 .price-card::before{content:"";position:absolute;top:0;right:0;width:0;height:0;
   border-style:solid;border-width:0 14px 14px 0;border-color:transparent rgba(200,0,26,0.50) transparent transparent;}
-.price-badge{
-  display:inline-block;
-  font-family:var(--font-type);font-size:9px;letter-spacing:3px;text-transform:uppercase;
-  color:#fff;background:rgba(200,0,26,0.65);padding:4px 10px;
-  margin-bottom:18px;
-}
+.price-badge{display:inline-block;font-family:var(--font-type);font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:#fff;background:rgba(200,0,26,0.65);padding:4px 10px;margin-bottom:18px;}
 .price-badge-long{background:rgba(92,58,30,0.80);}
-.price-amount{
-  font-family:var(--font-stamp);font-size:clamp(64px,8vw,110px);letter-spacing:2px;
-  color:var(--amber);line-height:1;margin-bottom:4px;
-}
+.price-amount{font-family:var(--font-stamp);font-size:clamp(64px,8vw,110px);letter-spacing:2px;
+  color:var(--amber);line-height:1;margin-bottom:4px;}
 .price-starting{font-family:var(--font-type);font-size:10px;letter-spacing:2px;
   text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:16px;display:block;}
 .price-desc{font-family:var(--font-body);font-size:16px;color:rgba(255,255,255,0.58);
-  line-height:1.55;margin-bottom:20px;font-weight:400;}
-.price-note{
-  display:block;
-  font-family:var(--font-type);font-size:10px;letter-spacing:1px;
-  color:rgba(255,255,255,0.32);
-  border-top:1px solid rgba(255,255,255,0.08);
-  padding-top:14px;margin-top:6px;
-  font-style:italic;
-}
-/* Bottom important note */
+  line-height:1.55;margin-bottom:20px;font-weight:400;text-align:left;}
+.price-note{display:block;font-family:var(--font-type);font-size:10px;letter-spacing:1px;
+  color:rgba(255,255,255,0.32);border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:14px;margin-top:6px;font-style:italic;text-align:left;}
 .pricing-footnote{
-  margin:40px auto 0; /* ⭐ CENTER */
-  max-width:900px;
-  text-align:left;
+  margin:40px auto 0;max-width:900px;text-align:left;
   font-family:var(--font-type);font-size:11px;letter-spacing:1px;
-  color:rgba(255,255,255,0.35);
-  padding:14px 18px;
-  border:1px solid rgba(255,255,255,0.08);
-  border-left:3px solid rgba(200,0,26,0.55);
-  background:rgba(200,0,26,0.04);
-  line-height:1.6;
-}
+  color:rgba(255,255,255,0.35);padding:14px 18px;
+  border:1px solid rgba(255,255,255,0.08);border-left:3px solid rgba(200,0,26,0.55);
+  background:rgba(200,0,26,0.04);line-height:1.6;}
 .pricing-footnote strong{color:var(--amber);font-weight:normal;}
 
 /* ── CONTACT ── */
 .contact{
-  background:var(--denim);
-  padding:80px clamp(16px,5vw,60px) 90px;
-  position:relative;overflow:hidden;
-  min-height:100svh;
-  display:flex;align-items:center;justify-content:center;text-align:center;
-}
+  background:var(--denim);padding:80px clamp(16px,5vw,60px) 90px;
+  position:relative;overflow:hidden;min-height:100svh;
+  display:flex;align-items:center;justify-content:center;text-align:center;}
 .contact::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(255,255,255,0.009) 3px,rgba(255,255,255,0.009) 6px);}
 .contact-top-line{position:absolute;top:0;left:0;right:0;height:4px;background:var(--red)}
@@ -547,7 +562,11 @@ footer{background:var(--ink);padding:22px clamp(16px,4vw,48px);display:flex;alig
 /* ── SCROLL REVEAL ── */
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .72s ease,transform .72s ease}
 .reveal.show{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.reveal,.video-card,.hero-char{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.reveal,.video-card,.hero-char,
+  .hero-tag,.hero-name,.hero-sub,.hero-btns,.status-badge,.hero-visual{
+    opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+  .hero-name-wrap::after{width:65%!important;}
+}
 </style>
 </head>
 <body>
@@ -566,6 +585,7 @@ footer{background:var(--ink);padding:22px clamp(16px,4vw,48px);display:flex;alig
 <section class="hero">
   <div class="corner c-tl"></div><div class="corner c-tr"></div>
   <div class="corner c-bl"></div><div class="corner c-br"></div>
+
   <div class="hero-left">
     <div class="hero-tag">Video Editor</div>
     <div class="hero-name-wrap">
@@ -577,43 +597,67 @@ footer{background:var(--ink);padding:22px clamp(16px,4vw,48px);display:flex;alig
       <a href="#contact" class="btn-outline">Contact Me</a>
     </div>
   </div>
+
   <div class="hero-right">
-    <!-- Decorative film reel visual -->
     <div class="hero-visual">
       <div class="hero-reel">
-        <div class="reel-accent-v"></div>
-        <div class="reel-accent-h"></div>
-        <div class="reel-ring"></div>
-        <div class="reel-ring-2"></div>
-        <!-- SVG reel spokes -->
-        <svg class="reel-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="96" stroke="rgba(200,0,26,0.35)" stroke-width="1"/>
-          <circle cx="100" cy="100" r="72" stroke="rgba(200,0,26,0.20)" stroke-width="0.75"/>
-          <circle cx="100" cy="100" r="28" stroke="rgba(200,0,26,0.40)" stroke-width="1.5"/>
-          <!-- 6 spoke holes -->
-          <circle cx="100" cy="30"  r="8" stroke="rgba(200,0,26,0.45)" stroke-width="1" fill="rgba(200,0,26,0.06)"/>
-          <circle cx="160" cy="65"  r="8" stroke="rgba(200,0,26,0.45)" stroke-width="1" fill="rgba(200,0,26,0.06)"/>
-          <circle cx="160" cy="135" r="8" stroke="rgba(200,0,26,0.45)" stroke-width="1" fill="rgba(200,0,26,0.06)"/>
-          <circle cx="100" cy="170" r="8" stroke="rgba(200,0,26,0.45)" stroke-width="1" fill="rgba(200,0,26,0.06)"/>
-          <circle cx="40"  cy="135" r="8" stroke="rgba(200,0,26,0.45)" stroke-width="1" fill="rgba(200,0,26,0.06)"/>
-          <circle cx="40"  cy="65"  r="8" stroke="rgba(200,0,26,0.45)" stroke-width="1" fill="rgba(200,0,26,0.06)"/>
-          <!-- Spokes -->
-          <line x1="100" y1="38" x2="100" y2="72" stroke="rgba(200,0,26,0.22)" stroke-width="1"/>
-          <line x1="152" y1="69" x2="128" y2="86" stroke="rgba(200,0,26,0.22)" stroke-width="1"/>
-          <line x1="152" y1="131" x2="128" y2="114" stroke="rgba(200,0,26,0.22)" stroke-width="1"/>
-          <line x1="100" y1="162" x2="100" y2="128" stroke="rgba(200,0,26,0.22)" stroke-width="1"/>
-          <line x1="48"  y1="131" x2="72"  y2="114" stroke="rgba(200,0,26,0.22)" stroke-width="1"/>
-          <line x1="48"  y1="69"  x2="72"  y2="86"  stroke="rgba(200,0,26,0.22)" stroke-width="1"/>
+        <!-- Static elements -->
+        <div class="reel-glow"></div>
+        <div class="reel-line-v"></div>
+        <div class="reel-line-h"></div>
+        <div class="reel-scan"></div>
+
+        <!-- Spinning body -->
+        <div class="reel-body"></div>
+        <div class="reel-inner"></div>
+
+        <!-- Spokes SVG — spins with reel -->
+        <svg class="reel-spokes-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- spoke lines from hub to holes -->
+          <line x1="100" y1="72"  x2="100" y2="35"  stroke="rgba(200,0,26,0.45)" stroke-width="1.5"/>
+          <line x1="128" y1="86"  x2="156" y2="68"  stroke="rgba(200,0,26,0.45)" stroke-width="1.5"/>
+          <line x1="128" y1="114" x2="156" y2="132" stroke="rgba(200,0,26,0.45)" stroke-width="1.5"/>
+          <line x1="100" y1="128" x2="100" y2="165" stroke="rgba(200,0,26,0.45)" stroke-width="1.5"/>
+          <line x1="72"  y1="114" x2="44"  y2="132" stroke="rgba(200,0,26,0.45)" stroke-width="1.5"/>
+          <line x1="72"  y1="86"  x2="44"  y2="68"  stroke="rgba(200,0,26,0.45)" stroke-width="1.5"/>
+          <!-- track rings -->
+          <circle cx="100" cy="100" r="95" stroke="rgba(200,0,26,0.55)" stroke-width="1.5" fill="none"/>
+          <circle cx="100" cy="100" r="72" stroke="rgba(200,0,26,0.30)" stroke-width="1" fill="none"/>
+          <!-- spoke holes -->
+          <circle cx="100" cy="28"  r="9" stroke="rgba(200,0,26,0.70)" stroke-width="1.5" fill="rgba(200,0,26,0.14)"/>
+          <circle cx="162" cy="64"  r="9" stroke="rgba(200,0,26,0.70)" stroke-width="1.5" fill="rgba(200,0,26,0.14)"/>
+          <circle cx="162" cy="136" r="9" stroke="rgba(200,0,26,0.70)" stroke-width="1.5" fill="rgba(200,0,26,0.14)"/>
+          <circle cx="100" cy="172" r="9" stroke="rgba(200,0,26,0.70)" stroke-width="1.5" fill="rgba(200,0,26,0.14)"/>
+          <circle cx="38"  cy="136" r="9" stroke="rgba(200,0,26,0.70)" stroke-width="1.5" fill="rgba(200,0,26,0.14)"/>
+          <circle cx="38"  cy="64"  r="9" stroke="rgba(200,0,26,0.70)" stroke-width="1.5" fill="rgba(200,0,26,0.14)"/>
         </svg>
-        <div class="reel-center"><div class="reel-center-hole"></div></div>
-        <div class="reel-strip"></div>
-        <!-- Floating labels -->
-        <span class="reel-badge rb-1">SHORT-FORM</span>
-        <span class="reel-badge rb-2">LONG-FORM</span>
-        <span class="reel-badge rb-3">MOTION SYNC</span>
+
+        <!-- Hub stays centered (not spinning) -->
+        <div class="reel-hub"><div class="reel-hub-hole"></div></div>
+
+        <!-- Film strip -->
+        <div class="reel-filmstrip-wrap"><div class="reel-filmstrip"></div></div>
+
+        <!-- Stat badges -->
+        <div class="reel-stat rs-top-left">
+          <span class="reel-stat-label">Short-form</span>
+          <span class="reel-stat-val">SF</span>
+          <div class="reel-stat-bar"></div>
+        </div>
+        <div class="reel-stat rs-top-right">
+          <span class="reel-stat-label">Long-form</span>
+          <span class="reel-stat-val">LF</span>
+          <div class="reel-stat-bar"></div>
+        </div>
+        <div class="reel-stat rs-bottom">
+          <span class="reel-stat-label">Motion sync</span>
+          <span class="reel-stat-val">MS</span>
+          <div class="reel-stat-bar"></div>
+        </div>
       </div>
     </div>
   </div>
+
   <div class="status-badge"><span class="status-dot"></span><span>Available for Work</span></div>
 </section>
 
@@ -752,7 +796,7 @@ footer{background:var(--ink);padding:22px clamp(16px,4vw,48px);display:flex;alig
             </div>
           </div>
         </div>
-        <div class="card-label"><span class="card-hand">clean motion</span><div class="card-title">Aesthetic Blueprint</div><div class="card-meta">Minimal · Technical</div></div>
+        <div class="card-label card-label-long"><span class="card-hand">clean motion</span><div class="card-title">Aesthetic Blueprint</div><div class="card-meta">Minimal · Technical</div></div>
       </div>
 
       <div class="video-card">
@@ -776,7 +820,7 @@ footer{background:var(--ink);padding:22px clamp(16px,4vw,48px);display:flex;alig
             </div>
           </div>
         </div>
-        <div class="card-label"><span class="card-hand">dynamic UI</span><div class="card-title">Roster Breakdown</div><div class="card-meta">Gaming · Narrative</div></div>
+        <div class="card-label card-label-long"><span class="card-hand">dynamic UI</span><div class="card-title">Roster Breakdown</div><div class="card-meta">Gaming · Narrative</div></div>
       </div>
 
       <div class="video-card">
@@ -800,7 +844,7 @@ footer{background:var(--ink);padding:22px clamp(16px,4vw,48px);display:flex;alig
             </div>
           </div>
         </div>
-        <div class="card-label"><span class="card-hand">fast cuts</span><div class="card-title">Rebellion vs Acceptance</div><div class="card-meta">Kinetic · Stylized</div></div>
+        <div class="card-label card-label-long"><span class="card-hand">fast cuts</span><div class="card-title">Rebellion vs Acceptance</div><div class="card-meta">Kinetic · Stylized</div></div>
       </div>
 
     </div>
@@ -813,7 +857,6 @@ footer{background:var(--ink);padding:22px clamp(16px,4vw,48px);display:flex;alig
   <div class="pricing-label reveal"><span class="pricing-eyebrow">// Rates &amp; Packages</span></div>
   <h2 class="pricing-title reveal">PRICING</h2>
   <p class="pricing-sub reveal">Base starting prices for each format. <strong>Prices are negotiable</strong> depending on complexity, editing style, amount of footage, and turnaround time.</p>
-
   <div class="pricing-cards reveal">
     <div class="price-card">
       <span class="price-badge">Short-form</span>
@@ -830,7 +873,6 @@ footer{background:var(--ink);padding:22px clamp(16px,4vw,48px);display:flex;alig
       <span class="price-note">Negotiable depending on the project.</span>
     </div>
   </div>
-
   <p class="pricing-footnote reveal"><strong>Important:</strong> These are base prices only — <strong>everything can be negotiated</strong> based on video length, style, effects, subtitles, and delivery speed.</p>
 </section>
 
@@ -898,24 +940,19 @@ document.querySelectorAll(".p5-player").forEach(player=>{
   const rightZ =player.querySelector(".p5-right");
 
   vid.volume = 0.8;
-if(volS) volS.value = 0.8;
-
-if(!isTD() && gestures){
-  gestures.style.display = "none";
-}else if(gestures){
-  gestures.style.display = "flex";
-  gestures.querySelectorAll(".p5-zone").forEach(z => {
-    z.style.pointerEvents = "auto";
-  });
-}
+  if(volS) volS.value = 0.8;
+  if(!isTD() && gestures){
+    gestures.style.display = "none";
+  }else if(gestures){
+    gestures.style.display = "flex";
+    gestures.querySelectorAll(".p5-zone").forEach(z => { z.style.pointerEvents = "auto"; });
+  }
 
   function setMuteUI(){
-  const ic = muteB?.querySelector(".p5-mute-icon");
-  if(!ic) return;
-  ic.src = (vid.muted || vid.volume === 0)
-    ? "volume muted.png"
-    : "volume on.png";
-}
+    const ic = muteB?.querySelector(".p5-mute-icon");
+    if(!ic) return;
+    ic.src = (vid.muted || vid.volume === 0) ? "volume muted.png" : "volume on.png";
+  }
   function setPlayUI(){const pl=!vid.paused&&!vid.ended;
     bigPl.style.display=pl?"none":"grid";
     const pi=playB?.querySelector(".p5-icon-play");
@@ -934,102 +971,66 @@ if(!isTD() && gestures){
     updSeek();});
   prog?.addEventListener("input",()=>{if(vid.duration)vid.currentTime=(Number(prog.value)/100)*vid.duration;});
   volS?.addEventListener("input",()=>{
-  vid.volume = Number(volS.value);
-  vid.muted = vid.volume === 0;
-  setMuteUI();
-});
+    vid.volume = Number(volS.value);
+    vid.muted = vid.volume === 0;
+    setMuteUI();
+  });
   muteB?.addEventListener("click",()=>{
-  if(vid.muted || vid.volume === 0){
-    vid.muted = false;
-    if(vid.volume === 0) vid.volume = 0.8;
-    if(volS) volS.value = vid.volume;
-  }else{
-    vid.muted = true;
-    if(volS) volS.value = 0;
-  }
-  setMuteUI();
-});
+    if(vid.muted || vid.volume === 0){
+      vid.muted = false;
+      if(vid.volume === 0) vid.volume = 0.8;
+      if(volS) volS.value = vid.volume;
+    }else{
+      vid.muted = true;
+      if(volS) volS.value = 0;
+    }
+    setMuteUI();
+  });
   backB?.addEventListener("click",()=>{vid.currentTime=Math.max(0,vid.currentTime-10);hint(player,"<< -10s");});
   fwdB?.addEventListener("click",()=>{vid.currentTime=Math.min(vid.duration||Infinity,vid.currentTime+10);hint(player,">> +10s");});
 
   function isMobileDevice(){
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 820;
-}
-
-function enterFakeFullscreen(){
-  player.classList.add("fs-mode");
-  document.body.classList.add("no-scroll");
-  updFsIcon();
-}
-
-function exitFakeFullscreen(){
-  player.classList.remove("fs-mode");
-  document.body.classList.remove("no-scroll");
-  updFsIcon();
-}
-
-async function toggleFS(){
-  const fe = getFsEl();
-  const fakeFs = player.classList.contains("fs-mode");
-
-  try{
-    if(fakeFs){
-      exitFakeFullscreen();
-      return;
-    }
-
-    if(fe){
-      if(document.exitFullscreen) await document.exitFullscreen();
-      else if(document.webkitExitFullscreen) await document.webkitExitFullscreen();
-      return;
-    }
-
-    if(isMobileDevice()){
-      if(player.requestFullscreen){
-        try{
-          await player.requestFullscreen();
-          return;
-        }catch(e){}
-      }
-
-      if(player.webkitRequestFullscreen){
-        try{
-          await player.webkitRequestFullscreen();
-          return;
-        }catch(e){}
-      }
-
-      enterFakeFullscreen();
-      return;
-    }
-
-    if(player.requestFullscreen){
-      await player.requestFullscreen();
-      return;
-    }
-
-    if(player.webkitRequestFullscreen){
-      await player.webkitRequestFullscreen();
-      return;
-    }
-
-  }catch(e){
-    enterFakeFullscreen();
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 820;
   }
-}
+  function enterFakeFullscreen(){
+    player.classList.add("fs-mode");
+    document.body.classList.add("no-scroll");
+    updFsIcon();
+  }
+  function exitFakeFullscreen(){
+    player.classList.remove("fs-mode");
+    document.body.classList.remove("no-scroll");
+    updFsIcon();
+  }
+  async function toggleFS(){
+    const fe = getFsEl();
+    const fakeFs = player.classList.contains("fs-mode");
+    try{
+      if(fakeFs){ exitFakeFullscreen(); return; }
+      if(fe){
+        if(document.exitFullscreen) await document.exitFullscreen();
+        else if(document.webkitExitFullscreen) await document.webkitExitFullscreen();
+        return;
+      }
+      if(isMobileDevice()){
+        if(player.requestFullscreen){ try{ await player.requestFullscreen(); return; }catch(e){} }
+        if(player.webkitRequestFullscreen){ try{ await player.webkitRequestFullscreen(); return; }catch(e){} }
+        enterFakeFullscreen(); return;
+      }
+      if(player.requestFullscreen){ await player.requestFullscreen(); return; }
+      if(player.webkitRequestFullscreen){ await player.webkitRequestFullscreen(); return; }
+    }catch(e){ enterFakeFullscreen(); }
+  }
   fullB?.addEventListener("click",toggleFS);
   document.addEventListener("keydown",(e)=>{
-  if(e.key==="Escape" && player.classList.contains("fs-mode")){
-    exitFakeFullscreen();
-  }
-});
-
+    if(e.key==="Escape" && player.classList.contains("fs-mode")) exitFakeFullscreen();
+  });
   function updFsIcon(){
-  const fs = !!getFsEl() || player.classList.contains("fs-mode");
-  const ic = fullB?.querySelector(".p5-full-icon");
-  if(ic) ic.src = fs ? "expand-arrows-two-icon.png" : "expand-icon.png";
-}
-  player._updFS=updFsIcon;updFsIcon();
+    const fs = !!getFsEl() || player.classList.contains("fs-mode");
+    const ic = fullB?.querySelector(".p5-full-icon");
+    if(ic) ic.src = fs ? "expand-arrows-two-icon.png" : "expand-icon.png";
+  }
+  player._updFS=updFsIcon; updFsIcon();
   vid.addEventListener("webkitbeginfullscreen",updFsIcon);
   vid.addEventListener("webkitendfullscreen",updFsIcon);
 
@@ -1042,13 +1043,12 @@ async function toggleFS(){
     leftZ?.addEventListener("click",()=>{const n=Date.now();if(n-ltL<dbl){vid.currentTime=Math.max(0,vid.currentTime-10);hint(player,"<< -10s");}ltL=n;});
     rightZ?.addEventListener("click",()=>{const n=Date.now();if(n-ltR<dbl){vid.currentTime=Math.min(vid.duration||Infinity,vid.currentTime+10);hint(player,">> +10s");}ltR=n;});
   }
-  setMuteUI();setPlayUI();
+  setMuteUI(); setPlayUI();
 });
 
 ["fullscreenchange","webkitfullscreenchange"].forEach(ev=>
   document.addEventListener(ev,()=>document.querySelectorAll(".p5-player").forEach(p=>p._updFS?.())));
-
-  window.addEventListener("resize",()=>{
+window.addEventListener("resize",()=>{
   document.querySelectorAll(".p5-player").forEach(p=>p._updFS?.());
 });
 
