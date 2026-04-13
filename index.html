@@ -290,7 +290,36 @@ body::before{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;
   .p5-player:fullscreen .p5-vol-slider,
   .p5-player:-webkit-full-screen .p5-vol-slider{width:72px;}
 }
+/* ANDROID FULLSCREEN FIX */
+.p5-player.fs-mode{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100dvh;
+  z-index:99999;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:#000;
+}
 
+.p5-player.fs-mode .p5-video{
+  width:100%;
+  height:calc(100dvh - 110px);
+  object-fit:contain;
+  background:#000;
+}
+
+.p5-player.fs-mode .p5-controls{
+  width:100%;
+  padding:14px 16px 16px;
+  border-top:2px solid var(--red);
+  background:linear-gradient(to top,rgba(12,18,28,0.96),rgba(12,18,28,0.88));
+}
+
+body.no-scroll{
+  overflow:hidden;
+}
 .p5-bigplay{position:absolute;inset:0;margin:auto;width:58px;height:58px;
   background:rgba(0,0,0,0.52);border:2px solid rgba(200,0,26,0.72);border-radius:50%;
   display:grid;place-items:center;cursor:pointer;z-index:6;
@@ -847,23 +876,69 @@ document.querySelectorAll(".p5-player").forEach(player=>{
   backB?.addEventListener("click",()=>{vid.currentTime=Math.max(0,vid.currentTime-10);hint(player,"<< -10s");});
   fwdB?.addEventListener("click",()=>{vid.currentTime=Math.min(vid.duration||Infinity,vid.currentTime+10);hint(player,">> +10s");});
 
-  async function toggleFS(){
-    const fe=getFsEl();
-    try{
-      if(fe){
-        if(document.exitFullscreen)await document.exitFullscreen();
-        else if(document.webkitExitFullscreen)await document.webkitExitFullscreen();
-        return;
-      }
-      if(player.requestFullscreen){await player.requestFullscreen();return;}
-      if(player.webkitRequestFullscreen){await player.webkitRequestFullscreen();return;}
-      if(/iPhone|iPad|iPod/i.test(navigator.userAgent)&&vid.webkitEnterFullscreen){vid.webkitEnterFullscreen();}
-    }catch(e){}
-  }
-  fullB?.addEventListener("click",toggleFS);
+  function isMobileDevice(){
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 820;
+}
 
-  function updFsIcon(){const fs=!!getFsEl()||!!vid.webkitDisplayingFullscreen;
-    const ic=fullB?.querySelector(".p5-full-icon");if(ic)ic.src=fs?"expand-arrows-two-icon.png":"expand-icon.png";}
+function enterFakeFullscreen(){
+  player.classList.add("fs-mode");
+  document.body.classList.add("no-scroll");
+  updFsIcon();
+}
+
+function exitFakeFullscreen(){
+  player.classList.remove("fs-mode");
+  document.body.classList.remove("no-scroll");
+  updFsIcon();
+}
+
+async function toggleFS(){
+  const fe=getFsEl();
+  const fakeFs = player.classList.contains("fs-mode");
+
+  try{
+    if(fakeFs){
+      exitFakeFullscreen();
+      return;
+    }
+
+    if(fe){
+      if(document.exitFullscreen) await document.exitFullscreen();
+      else if(document.webkitExitFullscreen) await document.webkitExitFullscreen();
+      return;
+    }
+
+    if(isMobileDevice()){
+      enterFakeFullscreen();
+      return;
+    }
+
+    if(player.requestFullscreen){
+      await player.requestFullscreen();
+      return;
+    }
+
+    if(player.webkitRequestFullscreen){
+      await player.webkitRequestFullscreen();
+      return;
+    }
+
+  }catch(e){
+    enterFakeFullscreen();
+  }
+}
+  fullB?.addEventListener("click",toggleFS);
+  document.addEventListener("keydown",(e)=>{
+  if(e.key==="Escape" && player.classList.contains("fs-mode")){
+    exitFakeFullscreen();
+  }
+});
+
+  function updFsIcon(){
+  const fs = !!getFsEl() || player.classList.contains("fs-mode");
+  const ic = fullB?.querySelector(".p5-full-icon");
+  if(ic) ic.src = fs ? "expand-arrows-two-icon.png" : "expand-icon.png";
+}
   player._updFS=updFsIcon;updFsIcon();
   vid.addEventListener("webkitbeginfullscreen",updFsIcon);
   vid.addEventListener("webkitendfullscreen",updFsIcon);
